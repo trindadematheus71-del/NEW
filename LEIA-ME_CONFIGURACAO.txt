@@ -1,0 +1,51 @@
+LUXX STORE AD — PACOTE PARA CLOUDFLARE PAGES
+
+O arquivo index.html foi mantido sem alterações visuais. O pacote inclui o painel administrativo e as funções do servidor.
+
+IMPORTANTE: enviar os arquivos ao GitHub não configura automaticamente os recursos da sua conta Cloudflare. Para o painel salvar alterações para todos os visitantes, é necessário fazer a configuração única de D1, R2 e das duas variáveis secretas descritas abaixo.
+
+1) ENVIAR PARA O GITHUB
+- Baixe este ZIP e extraia todos os arquivos.
+- Envie TODO o conteúdo extraído para a RAIZ do repositório conectado à Cloudflare, mantendo a estrutura:
+  index.html
+  schema.sql
+  functions/admin.js
+  functions/_lib/auth.js
+  functions/api/...
+  functions/media/...
+- Não envie somente o arquivo ZIP dentro do repositório.
+- Faça Commit changes na branch main.
+
+2) CLOUDFLARE PAGES
+- O projeto precisa ser conectado ao repositório GitHub; upload manual direto não publica Pages Functions.
+- Build command: deixe vazio/None.
+- Build output directory: . (um ponto).
+- Root directory: raiz do repositório.
+- Aguarde o deployment terminar.
+
+3) BANCO D1 (necessário para salvar configurações e produtos no servidor)
+- Crie um banco D1 chamado luxx-store-ad.
+- Abra o Console SQL e execute TODO o conteúdo de schema.sql.
+- No projeto Pages, em Settings > Functions > D1 database bindings, adicione o banco com Variable name exatamente: DB.
+
+4) ARMAZENAMENTO R2 (necessário para fotos enviadas pelo painel)
+- Crie um bucket R2 chamado luxx-store-ad-images.
+- Em Settings > Functions > R2 bucket bindings, adicione o bucket com Variable name exatamente: IMAGES.
+
+5) SENHAS DO PAINEL
+Em Settings > Variables and Secrets, no ambiente Production, crie:
+- ADMIN_PASSWORD: escolha uma senha forte para entrar no painel.
+- SESSION_SECRET: uma chave aleatória exclusiva com pelo menos 32 caracteres. Não use a mesma senha do painel.
+Salve e faça uma nova implantação após configurar os bindings e variáveis.
+
+6) ACESSAR
+- Abra https://SEU-DOMINIO.pages.dev/admin
+- Entre usando ADMIN_PASSWORD.
+- Após entrar, volte para a loja; o botão “Editar loja” deve aparecer.
+- Faça um teste pequeno e confira se o salvamento informa que foi salvo no servidor.
+
+OBSERVAÇÕES
+- Wrangler não precisa ser instalado para este fluxo pelo navegador.
+- Sem D1 vinculado como DB, o salvamento no servidor não funciona.
+- Sem R2 vinculado como IMAGES, o envio permanente de fotos não funciona.
+- Nunca compartilhe ADMIN_PASSWORD ou SESSION_SECRET.
